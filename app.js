@@ -27,6 +27,19 @@ searchBtn.addEventListener("click", () => {
   search.classList.toggle("active");
 });
 
+searchInput.addEventListener("input", (e) => {
+  const searchValue = searchInput.value.toLowerCase();
+  const pokemonNames = document.querySelectorAll(".poke-name");
+
+  pokemonNames.forEach((pokemonName) => {
+    if (pokemonName.innerHTML.toLowerCase().includes(searchValue)) {
+      pokemonName.parentElement.parentElement.style.display = "block";
+    } else {
+      pokemonName.parentElement.parentElement.style.display = "none";
+    }
+  });
+});
+
 const fetchPokemons = async () => {
   for (let i = 1; i < pokemonCount; i++) {
     await getPokemon(i);
@@ -37,7 +50,45 @@ const getPokemon = async (id) => {
   const url = `https://pokeapi.co/api/v2/pokemon/${id}`;
   const res = await fetch(url);
   const data = await res.json();
-  //   console.log(data);
+  // console.log(data);
+  createPokemonCard(data);
 };
 
+const createPokemonCard = (pokemon) => {
+  const pokemonDiv = document.createElement("div");
+  pokemonDiv.classList.add("pokemon");
+
+  const pokemonId = pokemon.id.toString().padStart(3, "0");
+  // console.log(pokemonId);
+  const pokemonType = pokemon.types[0].type.name;
+
+  const pokemonBg = bg_color[pokemonType];
+  pokemonDiv.style.backgroundColor = `${pokemonBg}`;
+
+  const pokemonDivInnerHTML = `
+  <div class="image-container">
+  <img src="https://assets.pokemon.com/assets/cms2/img/pokedex/full/${pokemonId}.png" alt="Pokemon 1 image">
+</div>
+<div class="poke-info">
+  <br> <span class="poke-id">#${pokemonId}</span>
+  <h3 class="poke-name">${pokemon.name}</h3>
+  <div class="small">
+      <small class="poke-exp">
+          <i class="fa-solid fa-flask"></i> ${pokemon.base_experience} exp
+      </small>
+      <small class="poke-weight">
+          <i class="fa-solid fa-flask"></i> ${pokemon.weight} kg
+      </small>
+  </div>
+
+  <div class="poke-type">
+      <i class="fa-brands fa-uncharted"></i> ${pokemonType}
+  </div>
+
+</div>
+    
+  `;
+  pokemonDiv.innerHTML = pokemonDivInnerHTML;
+  pokeContainer.appendChild(pokemonDiv);
+};
 fetchPokemons();
