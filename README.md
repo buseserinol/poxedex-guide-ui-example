@@ -25,6 +25,8 @@
 
 ## Netlify
 
+https://poxedex-guide.netlify.app/
+
 ## Contributions
 
 If you would like to contribute to the project, please fork it and submit a pull request. We welcome any contributions and suggestions.
